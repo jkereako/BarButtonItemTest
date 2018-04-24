@@ -11,6 +11,7 @@ import UIKit
 final class ViewController: UIViewController {
     @IBOutlet private weak var toggle: UISwitch!
 
+    private let barButtonItemText = "Say Hello"
     private let offColor = UIColor.gray
     private let onColor = UIColor.green
 
@@ -32,33 +33,15 @@ final class ViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .purple
         navigationController?.navigationBar.isTranslucent = true
 
-        let barButtonItem = UIBarButtonItem(
-            title: "Say Hello",
-            style: .plain,
-            target: self, action: #selector(barButtonItemAction(_:))
-        )
-
-        navigationItem.setRightBarButton(barButtonItem, animated: true)
-
-        // Style the bar button item
-        let attributes: [NSAttributedStringKey: Any] = [.foregroundColor: offColor]
-
-        barButtonItem.setTitleTextAttributes(attributes, for: .normal)
+        setRightBarButtonItem(text:barButtonItemText, textColor: offColor)
     }
 }
 
 // MARK: - Target-actions
 extension ViewController {
     @IBAction func toggleAction(_ sender: UISwitch) {
-        guard let barButtonItem = navigationItem.rightBarButtonItem else {
-            assertionFailure("Expected a bar button item")
-            return
-        }
-
         let color: UIColor = sender.isOn ? onColor : offColor
-        let attributes: [NSAttributedStringKey: Any] = [.foregroundColor: color]
-
-        barButtonItem.setTitleTextAttributes(attributes, for: .normal)
+        setRightBarButtonItem(text: barButtonItemText, textColor: color)
     }
 
     @IBAction func barButtonItemAction(_ sender: UISwitch) {
@@ -67,8 +50,31 @@ extension ViewController {
         )
 
         alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
-        
+
         present(alertController, animated: true)
+    }
+}
+
+// MARK: - Private Helpers
+private extension ViewController {
+    /// Sets the right bar button item with a specified text color. For some reason, setting the
+    /// text color on an existing UIBarButtonItem works in iOS 10, but not iOS 11. The solution
+    /// across both versions is to always reset the UIBarButtonItem instance.
+    ///
+    /// - Parameter textColor: The font color of the UIBarButtonItem
+    func setRightBarButtonItem(text: String, textColor: UIColor) {
+        let barButtonItem = UIBarButtonItem(
+            title: text,
+            style: .plain,
+            target: self, action: #selector(barButtonItemAction(_:))
+        )
+
+        navigationItem.setRightBarButton(barButtonItem, animated: false)
+
+        // Style the bar button item
+        let attributes: [NSAttributedStringKey: Any] = [.foregroundColor: textColor]
+
+        barButtonItem.setTitleTextAttributes(attributes, for: .normal)
     }
 }
 
