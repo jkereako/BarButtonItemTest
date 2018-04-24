@@ -13,6 +13,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="BarButtonItemTest" customModuleProvider="target">
             <connections>
+                <outlet property="toggle" destination="Kbj-Za-SUH" id="cTT-C7-kPE"/>
                 <outlet property="view" destination="iN0-l3-epB" id="BAK-UE-Bpa"/>
             </connections>
         </placeholder>
